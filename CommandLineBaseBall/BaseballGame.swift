@@ -12,41 +12,23 @@ class BaseballGame {
     func start() {
         let answer = makeAnswer()//정답 만드는 함수
         let answerArray = IntToArray(answer)//정답을 배열로 저장
-        
+        print(answer)
         outerLoop: while true {
-            print("숫자를 입력하세요")
-            let input = readLine()
-                        
-            if let inputValue = Int(input!) {// 입력값을 정수로 변환
-                var inputArray: Array<Int> = []
+            
+            //Lv4 안내문구 출력
+            print("환영합니다! 원하시는 번호를 입력해주세요")
+            print("1. 게임 시작하기  2. 게임 기록 보기  3. 종료하기")
+            let getNumber = readLine()
                 
-                inputArray = IntToArray(inputValue) //입력값을 배열로 변환
-               
-                //입력값이 3자리가 아닌 경우 or 입력값에 0이 포함된 경우
-                guard inputArray.count == 3 || inputArray.contains(0) else {
-                    print("올바르지 않은 입력값입니다")
-                    continue outerLoop//while에서 다시 반복을 시작하도록
-                }
-                
-                //중복된 숫자 있을 경우
-                let set: Set<Int> = Set<Int>(inputArray)
-                guard set.count == 3 else {
-                    print("올바르지 않은 입력값입니다")
-                    continue outerLoop
-                }
-                
-                if answer == inputValue {// 정답시 반복문 탈출
-                    print("정답입니다!")
-                    break
-                } else {// 정답과 입력값을 비교해 스트라이크/볼 출력
-                    print(CheckAnswer(answerArray, inputArray))
-                }
-                
-            } else {//입력값이 숫자가 아닌 경우
-                print("올바르지 않은 입력값입니다")
+            switch Int(getNumber!) {
+            case 1: PlayGame(answer, answerArray)
+            //case 2: GameRecords()
+            //case 3: break outerLoop
+            default: break
             }
-                        
+
         }
+        
     }
     
     func makeAnswer() -> Int {
@@ -132,5 +114,45 @@ class BaseballGame {
         
         return array
     }
+    
+    func PlayGame(_ answer: Int, _ answerArray: Array<Int>) {
+        gameLoop: while true {
+            print("숫자를 입력하세요")
+            let input = readLine()
+                        
+            if let inputValue = Int(input!) {// 입력값을 정수로 변환
+                var inputArray: Array<Int> = []
+                
+                inputArray = IntToArray(inputValue) //입력값을 배열로 변환
+               
+                //입력값이 3자리가 아닌 경우 or 입력값에 0이 포함된 경우
+                guard inputArray.count == 3 || inputArray.contains(0) else {
+                    print("올바르지 않은 입력값입니다")
+                    continue gameLoop//gameLoop 맨 처음부터 다시 반복
+                }
+                
+                //중복된 숫자 있을 경우
+                let set: Set<Int> = Set<Int>(inputArray)
+                guard set.count == 3 else {
+                    print("올바르지 않은 입력값입니다")
+                    continue gameLoop//gameLoop 맨 처음부터 다시 반복
+                }
+                
+                if answer == inputValue {// 정답시 반복문 탈출
+                    print("정답입니다!")
+                    break
+                } else {// 정답과 입력값을 비교해 스트라이크/볼 출력
+                    print(CheckAnswer(answerArray, inputArray))
+                }
+                
+            } else {//입력값이 숫자가 아닌 경우
+                print("올바르지 않은 입력값입니다")
+            }
+        }
+    }
+    
+    //func GameRecords() {
+        
+    //}
     
 }

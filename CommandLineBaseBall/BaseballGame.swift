@@ -24,10 +24,14 @@ class BaseballGame {
             case 1:
                 let answer = makeAnswer()//정답 만드는 함수
                 let answerArray = IntToArray(answer)//정답을 배열로 저장
-                PlayGame(answer, answerArray)
+                PlayGame(answer, answerArray)//게임 실행
             case 2: GameRecords()
-            //case 3: break outerLoop
-            default: break
+            case 3:
+                print("< 숫자 야구 게임을 종료합니다 >")
+                break outerLoop
+            default:
+                print("올바른 숫자를 입력해주세요!")
+                break
             }
 
         }

@@ -10,9 +10,45 @@ import Foundation
 class BaseballGame {
     
     func start() {
-        let answer = makeAnswer() //정답 만드는 함수
+        let answer = makeAnswer()//정답 만드는 함수
+        let answerArray = IntToArray(answer)//정답을 배열로 저장
         
-        print(answer)//정답 출력 테스트용 print함수
+        print("< 게임을 시작합니다 >")
+        
+        outerLoop: while true {
+            print("숫자를 입력하세요")
+            let input = readLine()
+                        
+            if let inputValue = Int(input!) {// 입력값을 정수로 변환  ///////int 변환시 맨앞자리 0은 저절로 사라짐!
+                var inputArray: Array<Int> = []
+                
+                inputArray = IntToArray(inputValue) //입력값을 배열로 변환
+               
+                //입력값이 3자리가 아닌 경우 or 입력값에 0이 포함된 경우
+                guard inputArray.count == 3 || inputArray.contains(0) else {
+                    print("올바르지 않은 입력값입니다")
+                    continue outerLoop//while에서 다시 반복을 시작하도록
+                }
+                
+                //중복된 숫자 있을 경우
+                let set: Set<Int> = Set<Int>(inputArray)
+                guard set.count == 3 else {
+                    print("올바르지 않은 입력값입니다")
+                    continue outerLoop
+                }
+                
+                if answer == inputValue {// 정답시 반복문 탈출
+                    print("정답입니다!")
+                    break
+                } else {// 정답과 입력값을 비교해 스트라이크/볼 출력
+                    print(CheckAnswer(answerArray, inputArray))
+                }
+                
+            } else {//입력값이 숫자가 아닌 경우
+                print("올바르지 않은 입력값입니다")
+            }
+                        
+        }
     }
     
     func makeAnswer() -> Int {
@@ -26,18 +62,15 @@ class BaseballGame {
          2-1. 3보다 작으면 랜덤값 추가
          2-2. 3이면 반복문 탈출
          */
-        while randomSet.count < 3 {
-            randomSet.insert(Int.random(in: 1...9))
-        }
-        
+        while randomSet.count < 3 { randomSet.insert(Int.random(in: 1...9)) }
         
         /* 랜덤값의 Set를 3자리수 Int로 변경
          1. Set -> Array로 변경
          2. 반복문으로 Array에서 추출해낸 값 -> Int 생성
          */
         let randomArray = Array(randomSet)
+        
         for i in 0..<randomArray.count {
-            
             if randomArray[i] == 0 {
                 answer += randomArray[i]
             } else {
@@ -46,6 +79,56 @@ class BaseballGame {
         }
         
         return answer
+    }
+    
+    func CheckAnswer(_ answer: Array<Int>, _ input: Array<Int>) -> String {
+        var strikeCount: Int = 0
+        var ballCount: Int = 0
+        var message = ""
+
+        for i in 0..<input.count {
+            for j in 0..<input.count {
+                if i == j {//스트라이크 판별 : index 동일 한 경우
+                    if answer[i] == input[j] { strikeCount += 1
+                    }
+                } else {//볼 판별 : index 다른 경우
+                    if answer[i] == input[j] { ballCount += 1
+                    }
+                }
+            }
+        }
+        
+        //출력 메세지 생성
+        if strikeCount >= 1 && ballCount == 0 {//strike만 있을 경우
+            message = "\(strikeCount)스트라이크"
+        } else if strikeCount == 0 && ballCount >= 1 {//ball만 있을 경우
+            message = "\(ballCount)볼"
+        } else if strikeCount == 0 && ballCount == 0 {//모두 없을 경우
+            message = "Nothing"
+        } else {//strike 또는 ball
+            message = "\(strikeCount)스트라이크 \(ballCount)볼"
+        }
+        
+        return message
+    }
+
+    func IntToArray(_ input: Int) -> Array<Int>{
+        var array: Array<Int> = []
+        var temp = input
+        
+        while !(temp == 0) {//Int값을 배열에 입력
+            array.append(temp % 10)
+            temp /= 10
+        }
+        
+        if array.count == 3 {
+            //입력된대로 순서 변경
+            temp = array[array.startIndex]
+            array[array.startIndex] = array[array.endIndex - 1]
+            array[array.endIndex - 1] = temp
+        }
+        
+        return array
     }
     
 }

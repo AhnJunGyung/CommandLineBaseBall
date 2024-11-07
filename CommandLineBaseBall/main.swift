@@ -11,6 +11,9 @@ let game = BaseballGame()
 
 game.start()
 
+let input = readLine()
 
-
+if let input = input {
+    print(input)
+}
 

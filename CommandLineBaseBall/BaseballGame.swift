@@ -21,7 +21,7 @@ class BaseballGame {
             
             //피드백 반영 : getNumber 강제언래핑 -> 바인딩
             if let getNumber = readLine(), let number = Int(getNumber) {
-                switch Int(getNumber) {
+                switch number {
                 case 1:
                     let answer = makeAnswer()//정답 만드는 함수
                     let answerArray = intToArray(answer)//정답을 배열로 저장

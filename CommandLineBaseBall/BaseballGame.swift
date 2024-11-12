@@ -8,21 +8,24 @@
 import Foundation
 
 class BaseballGame {
+    //Lv5 게임 기록 저장 프로퍼티
+    var tryCount: Int = 0
+    var records: Array<Int> = []
     
     func start() {
-        let answer = makeAnswer()//정답 만드는 함수
-        let answerArray = IntToArray(answer)//정답을 배열로 저장
-        print(answer)
+        
         outerLoop: while true {
-            
             //Lv4 안내문구 출력
             print("환영합니다! 원하시는 번호를 입력해주세요")
             print("1. 게임 시작하기  2. 게임 기록 보기  3. 종료하기")
             let getNumber = readLine()
                 
             switch Int(getNumber!) {
-            case 1: PlayGame(answer, answerArray)
-            //case 2: GameRecords()
+            case 1:
+                let answer = makeAnswer()//정답 만드는 함수
+                let answerArray = IntToArray(answer)//정답을 배열로 저장
+                PlayGame(answer, answerArray)
+            case 2: GameRecords()
             //case 3: break outerLoop
             default: break
             }
@@ -32,7 +35,6 @@ class BaseballGame {
     }
     
     func makeAnswer() -> Int {
-
         var randomSet: Set<Int> = Set<Int>()
         var answer = 0
         
@@ -138,8 +140,12 @@ class BaseballGame {
                     continue gameLoop//gameLoop 맨 처음부터 다시 반복
                 }
                 
+                tryCount += 1 //Lv5 정답 시도 카운트
                 if answer == inputValue {// 정답시 반복문 탈출
                     print("정답입니다!")
+                    //Lv5
+                    records.append(tryCount)//게임/시도 횟수 입력
+                    tryCount = 0 //시도횟수 초기화
                     break
                 } else {// 정답과 입력값을 비교해 스트라이크/볼 출력
                     print(CheckAnswer(answerArray, inputArray))
@@ -151,8 +157,12 @@ class BaseballGame {
         }
     }
     
-    //func GameRecords() {
-        
-    //}
+    func GameRecords() {//Lv5 게임 기록 출력
+        print("< 게임 기록 보기 >")
+        print(records.count)
+        for i in 0..<records.count {
+            print("\(i + 1)번째 게임 : 시도 횟수 - \(records[i])")
+        }
+    }
     
 }
